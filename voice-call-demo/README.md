@@ -1,5 +1,17 @@
-# Vue 3 + Vite
+# Frontend
+Thư mục chứa mã nguồn frontend.
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Cài đặt
+Chạy lệnh `yarn install` (hoặc `npm install`) để cài đặt các thư viện cần thiết.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Dev
+Chạy lệnh `yarn dev` (hoặc `npm run dev`) để chạy ứng dụng ở chế độ development.
+
+## Build
+Chạy lệnh `yarn build` (hoặc `npm run build`) để build ứng dụng ở chế độ production.
+
+## Phần mềm tham khảo
+- [Node.js](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/)
+- [Vue.js](https://vuejs.org/)
