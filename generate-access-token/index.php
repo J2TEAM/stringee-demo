@@ -4,8 +4,11 @@ require_once 'vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 
-define('API_KEY_SID', 'YOUR_API_KEY');
-define('API_KEY_SECRET', 'YOUR_SECRET_KEY');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+define('API_KEY_SID', $_ENV['API_KEY_SID']);
+define('API_KEY_SECRET', $_ENV['API_KEY_SECRET']);
 
 if (!isset($_GET['u']) || empty($_GET['u'])) {
 	$jwt = '';

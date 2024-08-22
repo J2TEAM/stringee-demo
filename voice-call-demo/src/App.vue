@@ -82,7 +82,7 @@ stringeeClient.on("incomingcall", (incomingcall) => {
 
 const onLogin = async () => {
   const res = await fetch(
-    `http://localhost/test/stringee/generate-access-token/?u=${username.value}`
+    `${import.meta.env.VITE_JWT_ENDPOINT}?u=${username.value}`
   );
 
   const data = await res.json();
