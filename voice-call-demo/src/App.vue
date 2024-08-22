@@ -9,6 +9,7 @@ const loading = ref(false);
 
 const localVideo = ref(null);
 const remoteVideo = ref(null);
+const isVideoCall = ref(false);
 
 const stringeeClient = new StringeeClient();
 let call = null; // call handler
@@ -42,6 +43,7 @@ function settingCallEvent(call1) {
     if (state.code === 3) {
       // call accepted
       isCalling.value = true;
+      loading.value = false;
     } else if (state.code === 4 || state.code === 5 || state.code === 6) {
       // call ended
       isCalling.value = false;
@@ -72,6 +74,7 @@ stringeeClient.on("incomingcall", (incomingcall) => {
   call = incomingcall;
   settingCallEvent(incomingcall);
   hasIncomingCall.value = true;
+  isVideoCall.value = incomingcall.isVideoCall;
 
   friendName.value = incomingcall.fromNumber;
   loading.value = true;
@@ -88,23 +91,24 @@ const onLogin = async () => {
   stringeeClient.connect(accessToken.value);
 };
 
-const onCall = async () => {
+const onCall = async (videoCall = false) => {
+  if (isCalling.value || !friendUsername.value) {
+    return;
+  }
+
   if (username.value === friendUsername.value) {
     alert("Không thể gọi cho chính mình");
     return;
   }
 
-  if (isCalling.value) {
-    return;
-  }
-
   loading.value = true;
+  isVideoCall.value = videoCall;
 
   call = new StringeeCall(
     stringeeClient,
     username.value,
     friendUsername.value,
-    false
+    videoCall
   );
   settingCallEvent(call);
 
@@ -120,6 +124,7 @@ const acceptCall = () => {
     console.log("answer call callback: " + JSON.stringify(res));
     hasIncomingCall.value = false;
     isCalling.value = true;
+    loading.value = false;
   });
 };
 
@@ -138,12 +143,17 @@ const hangupCall = () => {
     loading.value = false;
   });
 };
+
+const upgradeToVideoCall = () => {
+  call.upgradeToVideoCall();
+  isVideoCall.value = true;
+};
 </script>
 
 <template>
   <div class="row">
     <div class="col">
-      <h1>Demo: Voice Call</h1>
+      <h1>Demo: Voice Call & Video Call</h1>
 
       <p>
         Trạng thái:
@@ -166,7 +176,7 @@ const hangupCall = () => {
         <button type="submit" class="btn btn-primary">Đăng nhập</button>
       </form>
 
-      <form action="#" @submit.prevent="onCall" v-else>
+      <form action="#" @submit.prevent="onCall(false)" v-else>
         <div class="mb-3">
           <label for="friend-username" class="form-label"
             >Bạn muốn gọi cho ai?</label
@@ -182,8 +192,23 @@ const hangupCall = () => {
           />
         </div>
 
-        <button type="submit" class="btn btn-primary" :disabled="loading">
-          {{ loading ? "Đang gọi..." : "Gọi" }}
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="loading || isCalling"
+        >
+          <i class="bi bi-telephone"></i>
+          {{ loading ? "Đang gọi..." : "Gọi thoại" }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary ms-3"
+          :disabled="loading || isCalling"
+          @click="onCall(true)"
+        >
+          <i class="bi bi-camera-video"></i>
+          {{ loading ? "Đang gọi..." : "Gọi video" }}
         </button>
       </form>
 
@@ -207,12 +232,25 @@ const hangupCall = () => {
           Đang gọi cho: <strong>{{ friendName }}</strong>
         </p>
 
+        <!-- <button
+          v-if="!isVideoCall"
+          class="btn btn-primary me-3"
+          @click="upgradeToVideoCall"
+        >
+          <i class="bi bi-camera-video"></i> Chuyển sang gọi video
+        </button> -->
+
         <button class="btn btn-danger" @click="hangupCall">Kết thúc</button>
       </div>
 
-      <div>
-        <video ref="localVideo" autoplay muted style="width: 150px"></video>
-        <video ref="remoteVideo" autoplay style="width: 150px"></video>
+      <div class="mt-3" v-show="isCalling && isVideoCall">
+        <video ref="localVideo" autoplay muted style="width: 300px"></video>
+        <video
+          ref="remoteVideo"
+          autoplay
+          style="width: 300px"
+          class="ms-3"
+        ></video>
       </div>
     </div>
   </div>
