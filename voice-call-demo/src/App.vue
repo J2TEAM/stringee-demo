@@ -104,7 +104,7 @@ const onCall = async (videoCall = false) => {
   loading.value = true;
   isVideoCall.value = videoCall;
 
-  call = new StringeeCall(
+  call = new StringeeCall2(
     stringeeClient,
     username.value,
     friendUsername.value,
