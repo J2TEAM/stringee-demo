@@ -4,6 +4,10 @@ Thư mục chứa mã nguồn frontend.
 ## Cài đặt
 Chạy lệnh `yarn install` (hoặc `npm install`) để cài đặt các thư viện cần thiết.
 
+## Cấu hình
+- Copy file `.env.example` sang `.env`
+- Sửa link API trong file `.env`
+
 ## Dev
 Chạy lệnh `yarn dev` (hoặc `npm run dev`) để chạy ứng dụng ở chế độ development.
 
